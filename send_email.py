@@ -36,7 +36,7 @@ def send_email(to, subject, message, html=False):
         server.sendmail(gmail_user, to, msg.as_string())
         server.close()
     except:
-        print "Failed to send mail..."
+        print("Failed to send mail...")
 
 
 if __name__ == '__main__':

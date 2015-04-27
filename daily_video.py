@@ -5,13 +5,13 @@ import datetime
 from subprocess import Popen, check_output
 import hashlib
 import send_email as emailer
-import ConfigParser
+import configparser
 import os
 import shutil
 import uuid
 import tempdir
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('daily_video.cfg')
 
 frames_path = config.get('File Paths', 'frames_path')
@@ -33,7 +33,7 @@ def get_glob():
     yesterday_str = yesterday.strftime("%Y%m%d")
 
     glob_str = "{" + "*{0}19*,*{0}2*,".format(yesterday_str) + \
-               ",".join(["*{}{:02}*".format(today_str, i) for i in xrange(0, 10)]) + "}"
+               ",".join(["*{}{:02}*".format(today_str, i) for i in range(0, 10)]) + "}"
 
     return "{}/{}.jpg".format(frames_path, glob_str)
 
@@ -66,11 +66,11 @@ def make_video(frames):
     m.update(datetime.datetime.today().strftime("%Y%m%d"))
     video_name = m.hexdigest() + ".mp4"
 
-    print ffmpeg_command.format(duration,
+    print(ffmpeg_command.format(duration,
                               frames,
                               project_root,
                               video_path,
-                              video_name)
+                              video_name))
 
     process = Popen(ffmpeg_command.format(duration,
                                           frames,
@@ -93,6 +93,5 @@ def send_email(video_url):
 
 
 with tempdir.TempDir() as t:
-    # make_video(add_timestamp(get_glob(), t))
-    send_email(make_video(add_timestamp(get_glob(), t)))
-
+    make_video(add_timestamp(get_glob(), t))
+    # send_email(make_video(add_timestamp(get_glob(), t)))
